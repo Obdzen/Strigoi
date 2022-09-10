@@ -1,0 +1,17 @@
+fn basicFunction() {}
+
+extern fn puts(arg: i8)
+
+#impl(Add, u8) fn add(arg1: u8, arg2: u8) -> u8 {
+    return arg1 + arg2;
+}
+
+// Function Argument types can be inferred
+#impl(Sub, u8) fn sub(arg1: u8, arg2) -> u8 {
+    arg1 + arg2
+}
+
+#exe fn main() {
+    basicFunction();
+    add(10, 15);
+}
