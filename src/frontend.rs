@@ -1,4 +1,5 @@
 use chumsky::prelude::*;
+use ariadne::Cache;
 use std::ops::Range;
 
 use crate::hlir::Ast;
@@ -28,7 +29,11 @@ impl<'a> Frontend<'a> {
     }
 
     pub fn lex(&mut self) -> Result<(String, Vec<(Token, Range<usize>)>), Vec<Simple<char>>> {
-        let source = std::fs::read_to_string(&self.ctx.args.in_file).unwrap();
+        let mut source = String::new();
+        for line in self.ctx.cache.fetch(&self.ctx.args.in_file.as_path()).map_err(|x|vec![Simple::custom(0..0, format!("{:?}", x))])?.lines() {
+            line.chars().for_each(|c|source.push(c));
+            source.push('\n');
+        }
         let tokens = Token::lexer().parse(source.as_str())?;
         Ok((source, tokens))
     }
